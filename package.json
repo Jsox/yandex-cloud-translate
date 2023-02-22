@@ -6,6 +6,7 @@
     "author": "Eugene Yakunin <admin@jsix.ru> (https://jsix.ru)",
     "license": "MIT",
     "types": "dist/index.d.ts",
+    "repository": "https://github.com/Jsox/yandex-cloud-translate",
     "keywords": [
         "yandex",
         "cloud",
