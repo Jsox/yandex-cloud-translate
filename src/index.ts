@@ -1,7 +1,7 @@
 interface Config {
-	YC_OAUTH_TOKEN?: string;
-	YC_FOLDER_ID?: string;
-	YC_API_ADDRESS?: string;
+    YC_OAUTH_TOKEN?: string; // https://cloud.yandex.com/en-ru/docs/iam/concepts/authorization/oauth-token
+    YC_FOLDER_ID?: string; // https://cloud.yandex.com/en-ru/docs/resource-manager/operations/folder/get-id
+    YC_API_ADDRESS?: string;
 }
 interface ITranslateConfig {
     texts: string | string[]; // if a string - result will be a string, if array of strings - array of strings
