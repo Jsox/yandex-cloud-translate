@@ -4,10 +4,10 @@ interface Config {
 	YC_API_ADDRESS?: string;
 }
 interface ITranslateConfig {
-	texts: string | string[];
-	from?: string | null;
-	to: string;
-	format?: 'text' | 'html';
+    texts: string | string[]; // if a string - result will be a string, if array of strings - array of strings
+    from?: string | null; // ISO ru, en, fr ... etc
+    to: string; // ISO ru, en, fr ... etc
+    format?: 'text' | 'html';
 }
 interface IBody {
 	folderId: string;
