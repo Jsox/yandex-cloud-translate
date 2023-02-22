@@ -36,7 +36,8 @@ export class Yandex {
 			process.env.YC_API_ADDRESS ||
 			'https://translate.api.cloud.yandex.net/translate/v2/translate';
 
-		this.IAM_TOKEN = '';
+        this.IAM_TOKEN = '';
+        
 		this.IAM_TOKEN_EXPIRES = Date.now();
 
 		if (!this.YC_OAUTH_TOKEN) {
