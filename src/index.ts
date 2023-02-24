@@ -82,29 +82,38 @@ export class Yandex {
 		if (!this.IAM_TOKEN) {
 			throw new Error('invalid IAM_TOKEN');
 		}
+		if (!texts) {
+            throw new Error('invalid {texts} in Config');
+        }
+        if (!to) {
+            throw new Error('invalid {to} in Config');
+        }
 
-		let body: IBody;
-		body = {
-			folderId: this.YC_FOLDER_ID,
-			texts: typeof texts == 'string' ? [texts] : texts,
-			targetLanguageCode: to,
-			sourceLanguageCode: from,
-			format: format === 'html' ? 'HTML' : 'PLAIN_TEXT',
-		};
+        let body: IBody;
+        body = {
+            folderId: this.YC_FOLDER_ID,
+            texts: typeof texts === 'string' ? [texts] : texts,
+            targetLanguageCode: to,
+            sourceLanguageCode: from,
+            format: format === 'html' ? 'HTML' : 'PLAIN_TEXT',
+        };
 
-		const json = await fetch(this.YC_API_ADDRESS, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${this.IAM_TOKEN}`,
-			},
-			body: JSON.stringify(body),
-		})
-			.then(async (data) => await data.json())
-			.then((json) => json);
+        const json = await fetch(this.YC_API_ADDRESS, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.IAM_TOKEN}`,
+            },
+            body: JSON.stringify(body),
+        })
+            .then(async (data) => await data.json())
+            .then((json) => json);
 
-		return typeof texts == 'string'
-			? json.translations[0].text
-			: json.translations.map((tr: { text: string }) => tr.text);
+        if (!json.translations && json.message) {
+            throw new Error(`Translation error: ${json.message}`);
+        }
+        return typeof texts === 'string'
+            ? json.translations[0].text
+            : json.translations.map((tr: { text: string }) => tr.text);
 	}
 }

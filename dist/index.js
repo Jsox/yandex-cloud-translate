@@ -57,10 +57,16 @@ class Yandex {
             if (!this.IAM_TOKEN) {
                 throw new Error('invalid IAM_TOKEN');
             }
+            if (!texts) {
+                throw new Error('invalid {texts} in Config');
+            }
+            if (!to) {
+                throw new Error('invalid {to} in Config');
+            }
             let body;
             body = {
                 folderId: this.YC_FOLDER_ID,
-                texts: typeof texts == 'string' ? [texts] : texts,
+                texts: typeof texts === 'string' ? [texts] : texts,
                 targetLanguageCode: to,
                 sourceLanguageCode: from,
                 format: format === 'html' ? 'HTML' : 'PLAIN_TEXT',
@@ -75,7 +81,10 @@ class Yandex {
             })
                 .then((data) => __awaiter(this, void 0, void 0, function* () { return yield data.json(); }))
                 .then((json) => json);
-            return typeof texts == 'string'
+            if (!json.translations && json.message) {
+                throw new Error(`Translation error: ${json.message}`);
+            }
+            return typeof texts === 'string'
                 ? json.translations[0].text
                 : json.translations.map((tr) => tr.text);
         });
