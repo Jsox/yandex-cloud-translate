@@ -1,12 +1,10 @@
-
 # yandex-cloud-translate
 
 Translate text with Yandex Cloud AI API
 
 ## Features
 
-- ts included
-
+-   ts included
 
 ## Installation
 
@@ -15,12 +13,13 @@ Install my-project with npm
 ```bash
   npm i yandex-cloud-translate
 ```
+
 or
+
 ```bash
   yarn add yandex-cloud-translate
 ```
 
-    
 ## Usage/Examples
 
 ```javascript
@@ -35,25 +34,26 @@ const Ya = new Yandex(config);
 ```
 
 or if you have valid process.env, just create in .env file YC_OAUTH_TOKEN and YC_FOLDER_ID
+
 ```javascript
 import { Yandex } from 'yandex-cloud-translate';
 const Ya = new Yandex();
 const translated = await Ya.translate({
     to: 'fr',
-    from: 'en', // or auto
-    texts: ['text one', 'text two'], // or texts: 'text one'
-    format: 'text' // or 'html'
+    from: 'en', // or don`t set to auto
+    texts: ['text one', 'text two'], // or texts: 'text one'. string, or array of strings
+    format: 'text', // or 'html'. default: 'text'
 });
 
-// 
+//
 interface ITranslateConfig {
     texts: string | string[]; // if a string - result will be a string, if array of strings - array of strings
-    from?: string | null; // ISO ru, en, fr ... etc
     to: string; // ISO ru, en, fr ... etc
+    from?: string | null; // ISO ru, en, fr ... etc
     format?: 'text' | 'html';
 }
-
 ```
+
 ## Authors
 
-- [@jsix](https://jsix.ru)
+-   [@jsix](https://jsix.ru)
