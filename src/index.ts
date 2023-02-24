@@ -10,79 +10,79 @@ interface ITranslateConfig {
     format?: 'text' | 'html';
 }
 interface IBody {
-	folderId: string;
-	texts: string[];
-	targetLanguageCode: string;
-	sourceLanguageCode?: string | null;
-	format: 'PLAIN_TEXT' | 'HTML';
+    folderId: string;
+    texts: string[];
+    targetLanguageCode: string;
+    sourceLanguageCode?: string | null;
+    format: 'PLAIN_TEXT' | 'HTML';
 }
 
 export class Yandex {
-	private YC_OAUTH_TOKEN: string;
-	private YC_FOLDER_ID: string;
-	private IAM_TOKEN: string;
-	private IAM_TOKEN_EXPIRES: number;
-	private YC_API_ADDRESS: string;
+    private YC_OAUTH_TOKEN: string;
+    private YC_FOLDER_ID: string;
+    private IAM_TOKEN: string;
+    private IAM_TOKEN_EXPIRES: number;
+    private YC_API_ADDRESS: string;
 
-	constructor(config: Config = {}) {
-		const { YC_OAUTH_TOKEN, YC_FOLDER_ID, YC_API_ADDRESS } = config;
+    constructor(config: Config = {}) {
+        const { YC_OAUTH_TOKEN, YC_FOLDER_ID, YC_API_ADDRESS } = config;
 
-		this.YC_OAUTH_TOKEN = YC_OAUTH_TOKEN || process.env.YC_OAUTH_TOKEN || '';
+        this.YC_OAUTH_TOKEN = YC_OAUTH_TOKEN || process.env.YC_OAUTH_TOKEN || '';
 
-		this.YC_FOLDER_ID = YC_FOLDER_ID || process.env.YC_FOLDER_ID || '';
+        this.YC_FOLDER_ID = YC_FOLDER_ID || process.env.YC_FOLDER_ID || '';
 
-		this.YC_API_ADDRESS =
-			YC_API_ADDRESS ||
-			process.env.YC_API_ADDRESS ||
-			'https://translate.api.cloud.yandex.net/translate/v2/translate';
+        this.YC_API_ADDRESS =
+            YC_API_ADDRESS ||
+            process.env.YC_API_ADDRESS ||
+            'https://translate.api.cloud.yandex.net/translate/v2/translate';
 
         this.IAM_TOKEN = '';
-        
-		this.IAM_TOKEN_EXPIRES = Date.now();
 
-		if (!this.YC_OAUTH_TOKEN) {
-			throw new Error('invalid YC_OAUTH_TOKEN (add to .env YC_OAUTH_TOKEN)');
-		}
+        this.IAM_TOKEN_EXPIRES = Date.now();
 
-		if (!this.YC_FOLDER_ID) {
-			throw new Error('invalid YC_FOLDER_ID (add to .env YC_FOLDER_ID)');
-		}
+        if (!this.YC_OAUTH_TOKEN) {
+            throw new Error('invalid YC_OAUTH_TOKEN (add to .env YC_OAUTH_TOKEN)');
+        }
 
-		if (typeof fetch != 'function') {
-			throw new Error('You don`t have fetch function. Setup or use nodejs version >= 18');
-		}
-	}
+        if (!this.YC_FOLDER_ID) {
+            throw new Error('invalid YC_FOLDER_ID (add to .env YC_FOLDER_ID)');
+        }
 
-	async setIamToken() {
-		let hour = 60 * 60 * 1000;
+        if (typeof fetch != 'function') {
+            throw new Error('You don`t have fetch function. Setup or use nodejs version >= 18');
+        }
+    }
 
-		if (this.IAM_TOKEN && (this.IAM_TOKEN_EXPIRES - Date.now()) / hour > 11) {
-			return;
-		}
+    async setIamToken() {
+        let hour = 60 * 60 * 1000;
 
-		const iAm = await fetch('https://iam.api.cloud.yandex.net/iam/v1/tokens', {
-			method: 'POST',
-			body: JSON.stringify({
-				yandexPassportOauthToken: this.YC_OAUTH_TOKEN,
-			}),
-		})
-			.then(async (data) => await data.json())
-			.then((json) => {
-				return json;
-			});
+        if (this.IAM_TOKEN && (this.IAM_TOKEN_EXPIRES - Date.now()) / hour > 11) {
+            return;
+        }
 
-		this.IAM_TOKEN = iAm.iamToken;
+        const iAm = await fetch('https://iam.api.cloud.yandex.net/iam/v1/tokens', {
+            method: 'POST',
+            body: JSON.stringify({
+                yandexPassportOauthToken: this.YC_OAUTH_TOKEN,
+            }),
+        })
+            .then(async (data) => await data.json())
+            .then((json) => {
+                return json;
+            });
 
-		this.IAM_TOKEN_EXPIRES = new Date(iAm.expiresAt).getTime();
-	}
+        this.IAM_TOKEN = iAm.iamToken;
 
-	async translate({ texts, to, from = null, format = 'text' }: ITranslateConfig): Promise<typeof texts> {
-		await this.setIamToken();
+        this.IAM_TOKEN_EXPIRES = new Date(iAm.expiresAt).getTime();
+    }
 
-		if (!this.IAM_TOKEN) {
-			throw new Error('invalid IAM_TOKEN');
-		}
-		if (!texts) {
+    async translate({ texts, to, from = null, format = 'text' }: ITranslateConfig): Promise<typeof texts> {
+        await this.setIamToken();
+
+        if (!this.IAM_TOKEN) {
+            throw new Error('invalid IAM_TOKEN');
+        }
+        if (!texts) {
             throw new Error('invalid {texts} in Config');
         }
         if (!to) {
@@ -115,5 +115,5 @@ export class Yandex {
         return typeof texts === 'string'
             ? json.translations[0].text
             : json.translations.map((tr: { text: string }) => tr.text);
-	}
+    }
 }
