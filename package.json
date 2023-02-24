@@ -1,6 +1,6 @@
 {
     "name": "yandex-cloud-translate",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Translate text with Yandex Cloud AI API",
     "main": "./dist/index.js",
     "author": "Eugene Yakunin <admin@jsix.ru> (https://jsix.ru)",
