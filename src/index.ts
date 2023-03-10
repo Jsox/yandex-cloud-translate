@@ -1,3 +1,4 @@
+import { fetch } from './fetch'
 interface Config {
     YC_OAUTH_TOKEN?: string; // https://cloud.yandex.com/en-ru/docs/iam/concepts/authorization/oauth-token
     YC_FOLDER_ID?: string; // https://cloud.yandex.com/en-ru/docs/resource-manager/operations/folder/get-id
@@ -46,10 +47,6 @@ export class Yandex {
 
         if (!this.YC_FOLDER_ID) {
             throw new Error('invalid YC_FOLDER_ID (add to .env YC_FOLDER_ID)');
-        }
-
-        if (typeof fetch != 'function') {
-            throw new Error('You don`t have fetch function. Setup or use nodejs version >= 18');
         }
     }
 
